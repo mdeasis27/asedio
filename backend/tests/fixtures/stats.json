@@ -1,0 +1,26 @@
+{
+  "vulnerable": {
+    "total": 12,
+    "pass": 0,
+    "fail": 9,
+    "needsReview": 3,
+    "falsePositives": 2,
+    "fpRate": 0.6666666666666666,
+    "neutralizedRate": 0.0,
+    "detectionRate": 0.8333333333333334,
+    "findings": 10
+  },
+  "hardened": {
+    "total": 12,
+    "pass": 12,
+    "fail": 0,
+    "needsReview": 0,
+    "falsePositives": 0,
+    "fpRate": 0.0,
+    "neutralizedRate": 1.0,
+    "detectionRate": 0.0,
+    "findings": 0
+  },
+  "regressions": 0,
+  "severity": { "critical": 6, "high": 3, "medium": 0, "low": 0 }
+}

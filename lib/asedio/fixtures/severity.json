@@ -1,0 +1,10 @@
+{
+  "cases": [
+    { "exploitability": 4, "impact": 5, "expected": "critical" },
+    { "exploitability": 5, "impact": 5, "expected": "critical" },
+    { "exploitability": 3, "impact": 4, "expected": "high" },
+    { "exploitability": 3, "impact": 3, "expected": "high" },
+    { "exploitability": 2, "impact": 2, "expected": "medium" },
+    { "exploitability": 1, "impact": 2, "expected": "low" }
+  ]
+}
