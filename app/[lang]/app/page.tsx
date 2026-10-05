@@ -1,11 +1,87 @@
 "use client";
-import {useState} from "react";
-import {ATTACKS} from "@/lib/asedio/demo";
-import {runExperience} from "@/lib/experience/adapter";
-import {useLocale} from "@/design-system/i18n/context";
-import {useDemoRun} from "@/design-system/demo/use-demo-run";
-import {TracePlayer} from "@/design-system/demo/trace-player";
-import {traceCopy} from "@/lib/experience/trace-copy";
-import {DecisionNarrative} from "@/lib/experience/story-visual";
-import {AsedioScene} from "@/lib/experience/asedio-scene";
-export default function Page(){const es=useLocale()==="es";const families=[...new Set(ATTACKS.map(a=>a.category))];const [target,setTarget]=useState<"vulnerable"|"hardened">("hardened"),[family,setFamily]=useState(families[0]),[scenario,setScenario]=useState("a"),demo=useDemoRun(runExperience),result=demo.run?.result;const reset=()=>{setTarget("hardened");setFamily(families[0]);setScenario("a");demo.reset()};const manual=(f:()=>void)=>{f();setScenario("");demo.reset()};const choose=(id:string)=>{setScenario(id);setFamily(families[0]);setTarget(id==="a"?"hardened":"vulnerable");demo.reset()};return <main className="min-h-screen bg-background px-6 py-16 text-foreground"><div className="mx-auto max-w-5xl"><DecisionNarrative kind="defense" locale={es?"es":"en"} selected={scenario} onScenario={choose}/><h1 className="text-4xl font-semibold">{es?"Observa la postura de defensa.":"Observe defense posture."}</h1><div className="mt-8 grid gap-6 md:grid-cols-2"><section className="min-w-0 rounded-xl border border-border p-5"><label>{es?"Objetivo":"Target"}<select className="mt-2 w-full rounded border bg-background p-2" value={target} onChange={e=>manual(()=>setTarget(e.target.value as "vulnerable"|"hardened"))}><option value="hardened">{es?"Endurecido":"Hardened"}</option><option value="vulnerable">{es?"Vulnerable":"Vulnerable"}</option></select></label><label className="mt-4 block">{es?"Familia":"Family"}<select className="mt-2 w-full rounded border bg-background p-2" value={family} onChange={e=>manual(()=>setFamily(e.target.value))}>{families.map(f=><option key={f}>{f}</option>)}</select></label><div className="mt-5 flex flex-wrap gap-2"><button className="min-w-0 flex-1 rounded bg-accent px-4 py-3 text-white" onClick={()=>demo.execute({target,families:[family]})}>{es?"Ejecutar":"Run checks"}</button><button className="rounded border px-3" onClick={demo.cancel}>{es?"Cancelar":"Cancel"}</button><button className="rounded border px-3" onClick={reset}>{es?"Reiniciar":"Reset"}</button></div>{demo.error&&<p className="mt-3 text-danger">{es?"No se pudo ejecutar la batería.":"The battery could not run."}</p>}</section><section className="min-w-0">{result&&demo.run?<TracePlayer translate={k=>traceCopy(es?"es":"en",k)} trace={demo.trace} locale={es?"es":"en"} executionMs={demo.run.executionMs} renderStage={frame=><AsedioScene frame={frame} input={demo.run!.input} result={result} locale={es?"es":"en"}/>}/>:<p>{es?"Elige una situación y ejecuta las pruebas.":"Choose a situation and run the tests."}</p>}</section></div></div></main>}
+import { useState } from "react";
+import { useLocale } from "@/design-system/i18n/context";
+import { TracePlayer } from "@/design-system/demo/trace-player";
+import { MissionPrompt, MissionComparison } from "@/design-system/demo/mission-lab";
+import { useDemoRun } from "@/design-system/demo/use-demo-run";
+import { StoryHero, StorySection, AnalogyBlock, WhyIBuiltIt, FitGuide, ProvesBlock, EngineerNotes } from "@/design-system/demo/project-story";
+import { FAMILY_ORDER } from "@/lib/asedio/demo";
+import { traceCopy } from "@/lib/experience/trace-copy";
+import { runMission } from "@/lib/experience/mission";
+import { AsedioStoryScene } from "@/lib/experience/story-scene";
+import { COMPLETE_FRAME } from "@/lib/experience/scene-state";
+import { STORY } from "@/lib/experience/story";
+
+const REPO = "https://github.com/mdeasis27/asedio";
+const DEFAULT_COVERED = 4;
+
+export default function Page() {
+  const locale = useLocale();
+  const t = STORY[locale];
+  const [covered, setCovered] = useState(DEFAULT_COVERED);
+  const [prediction, setPrediction] = useState<string | null>(null);
+  const demo = useDemoRun(runMission);
+  const run = demo.run;
+  const result = run?.result;
+  // Section 03 waits for the tape to finish; keyed to the trace so every new run resets it.
+  const [playedTrace, setPlayedTrace] = useState<typeof demo.trace | null>(null);
+  const played = demo.trace.length === 0 || playedTrace === demo.trace;
+  const clear = () => { setPrediction(null); demo.reset(); };
+  const reset = () => { setCovered(DEFAULT_COVERED); clear(); };
+  const scene = (frame: typeof COMPLETE_FRAME) => run && result ? <AsedioStoryScene frame={frame} covered={run.input.covered} result={result} locale={locale} /> : null;
+  const defended = FAMILY_ORDER.slice(0, covered).map(f => t.tryIt.families[f]);
+
+  return <main className="mx-auto max-w-5xl px-5 py-8 text-foreground sm:py-12">
+    <StoryHero name={t.name} oneLiner={t.oneLiner} chips={t.chips} />
+
+    <StorySection index={1} heading={t.analogy.heading}>
+      <AnalogyBlock paragraphs={t.analogy.paragraphs} dictionaryLabel={t.analogy.dictionaryLabel} dictionary={t.analogy.dictionary} />
+    </StorySection>
+
+    <WhyIBuiltIt title={t.why.title} text={t.why.text} />
+
+    <StorySection index={2} heading={t.tryIt.heading} lead={t.tryIt.lead}>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)]">
+        <section className="min-w-0 rounded-xl border border-border bg-surface p-5">
+          <MissionPrompt locale={locale} question={t.tryIt.question(covered)} prediction={prediction} onPredict={setPrediction} locked={Boolean(run) || demo.running} options={[{ id: "yes", label: t.tryIt.yes }, { id: "no", label: t.tryIt.no }]} />
+          <label className="mt-5 block text-sm">{t.tryIt.coverageLabel} <span className="font-mono">{covered} / {FAMILY_ORDER.length}</span>
+            <input aria-label={t.tryIt.coverageLabel} className="mt-2 w-full" type="range" min="0" max={FAMILY_ORDER.length} step="1" value={covered} onChange={e => { setCovered(Number(e.target.value)); clear(); }} />
+          </label>
+          <p className="mt-2 text-xs leading-5 text-muted-foreground">{defended.length ? `${t.tryIt.coveredList} ${defended.join(", ")}.` : t.tryIt.noneCovered}</p>
+          <p className="mt-4 text-xs leading-5 text-muted-foreground">{t.tryIt.note}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <button type="button" data-run-experiment disabled={demo.running} className="min-w-0 flex-1 rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white disabled:opacity-60" onClick={() => demo.execute({ covered })}>{t.tryIt.simulate}</button>
+            <button type="button" className="rounded-lg border border-border px-3 py-3 text-sm" onClick={demo.cancel}>{t.tryIt.cancel}</button>
+            <button type="button" className="rounded-lg border border-border px-3 py-3 text-sm" onClick={reset}>{t.tryIt.reset}</button>
+          </div>
+          {demo.error ? <p role="alert" className="mt-3 text-sm text-danger">{t.tryIt.error}</p> : null}
+        </section>
+        <section className="min-w-0">
+          {run && result
+            ? (demo.trace.length === 0 ? scene(COMPLETE_FRAME) : <TracePlayer collapsible autoPlay headingLevel="h3" onComplete={() => setPlayedTrace(demo.trace)} translate={key => traceCopy(locale, key)} trace={demo.trace} locale={locale} executionMs={run.executionMs} renderStage={scene} />)
+            : <p className="rounded-xl border border-dashed border-border p-8 text-sm text-muted-foreground">{t.tryIt.idle}</p>}
+        </section>
+      </div>
+    </StorySection>
+
+    <StorySection index={3} heading={t.compare.heading} lead={t.compare.lead}>
+      {run && result && played ? <MissionComparison locale={locale} prediction={prediction} actual={result.through > 0 ? "yes" : "no"} actualLabel={t.scene.throughOf(result.through)} explanation={t.compare.sentence(result.comparison.mine, result.comparison.full)} sides={[
+        { label: t.compare.mine(run.input.covered), value: `${result.comparison.mine}`, detail: t.compare.through },
+        { label: t.compare.full, value: `${result.comparison.full}`, detail: t.compare.through, positive: result.comparison.full < result.comparison.mine },
+      ]} /> : null}
+    </StorySection>
+
+    <StorySection index={4} heading={t.fit.heading}>
+      <FitGuide worthLabel={t.fit.worthLabel} worth={t.fit.worth} notLabel={t.fit.notLabel} not={t.fit.not} />
+    </StorySection>
+
+    <StorySection index={5} heading={t.proves.heading}>
+      <ProvesBlock text={t.proves.text} />
+    </StorySection>
+
+    <EngineerNotes summary={t.engineers.summary}>
+      <ul className="list-disc space-y-2 pl-5">{t.engineers.points.map(p => <li key={p}>{p}</li>)}</ul>
+      <a className="mt-4 inline-block text-accent underline underline-offset-4" href={REPO}>{t.engineers.repoLabel} →</a>
+    </EngineerNotes>
+  </main>;
+}
