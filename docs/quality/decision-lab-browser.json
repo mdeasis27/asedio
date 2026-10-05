@@ -1,0 +1,51 @@
+{
+  "repository": "asedio",
+  "scope": "Real React component with controlled locale; Next routes not tested.",
+  "checks": [
+    {
+      "locale": "en",
+      "scenarios": [
+        {
+          "preset": "Hardened proxy\nJailbreak family against the hardened local target.",
+          "outcome": "Defense passed\n\n0 failures and 0 review cases for hardened."
+        },
+        {
+          "preset": "Vulnerable proxy\nThe same jailbreak family against the vulnerable local target.",
+          "outcome": "Exposure detected\n\n2 failures and 0 review cases for vulnerable."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    },
+    {
+      "locale": "es",
+      "scenarios": [
+        {
+          "preset": "Proxy endurecido\nFamilia jailbreak contra el objetivo local endurecido.",
+          "outcome": "Defensa aprobada\n\n0 fallos y 0 casos por revisar para hardened."
+        },
+        {
+          "preset": "Proxy vulnerable\nLa misma familia jailbreak contra el objetivo local vulnerable.",
+          "outcome": "Exposición detectada\n\n2 fallos y 0 casos por revisar para vulnerable."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,46 @@
+{
+  "repository": "asedio",
+  "checks": [
+    {
+      "locale": "en",
+      "htmlLang": "en",
+      "buttons": [
+        "Run simulated checks",
+        "Cancel",
+        "Reset"
+      ],
+      "inputs": 2,
+      "clicked": "Run simulated checks",
+      "traceEvents": 2,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    },
+    {
+      "locale": "es",
+      "htmlLang": "es",
+      "buttons": [
+        "Ejecutar comprobaciones",
+        "Cancelar",
+        "Reiniciar"
+      ],
+      "inputs": 2,
+      "clicked": "Ejecutar comprobaciones",
+      "traceEvents": 2,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    }
+  ],
+  "errors": [],
+  "legacyRedirectRetainsQuery": true,
+  "unsupportedLocale404": true,
+  "translatedBodyDiffers": true,
+  "reducedMotionDisablesPlayback": true,
+  "mobileNoOverflow": true,
+  "noExternalOrApiRequests": true
+}
