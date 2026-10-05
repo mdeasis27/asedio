@@ -1,0 +1,40 @@
+{
+  "en": {
+    "user": "Pre-release security tester",
+    "problem": "A change can pass ordinary checks while a known attack family still succeeds.",
+    "workflow": "Choose hardened or vulnerable proxy, run the selected attack family, then inspect failures by case.",
+    "decision": "Fix the target before release or continue validation.",
+    "value": "Connects an attack case to a concrete pre-release decision.",
+    "visual": "Attack probes fan into a target shield and failure signals.",
+    "scenarioA": {
+      "title": "Hardened proxy",
+      "input": "Jailbreak family against the hardened local target.",
+      "observation": "Selected attack cases pass the hardened proxy."
+    },
+    "scenarioB": {
+      "title": "Vulnerable proxy",
+      "input": "The same jailbreak family against the vulnerable local target.",
+      "observation": "The same attack family exposes failures."
+    },
+    "limitation": "The proxy and attack cases are deterministic test fixtures, not a security certification."
+  },
+  "es": {
+    "user": "Probador de seguridad previo al lanzamiento",
+    "problem": "Un cambio puede pasar comprobaciones comunes mientras una familia de ataques conocida aún funciona.",
+    "workflow": "Elige proxy endurecido o vulnerable, ejecuta la familia de ataques seleccionada e inspecciona fallos por caso.",
+    "decision": "Corregir el objetivo antes de lanzar o continuar la validación.",
+    "value": "Conecta un caso de ataque con una decisión concreta previa al lanzamiento.",
+    "visual": "Sondas de ataque convergen en un escudo objetivo y señales de fallo.",
+    "scenarioA": {
+      "title": "Proxy endurecido",
+      "input": "Familia jailbreak contra el objetivo local endurecido.",
+      "observation": "Los casos de ataque seleccionados pasan el proxy endurecido."
+    },
+    "scenarioB": {
+      "title": "Proxy vulnerable",
+      "input": "La misma familia jailbreak contra el objetivo local vulnerable.",
+      "observation": "La misma familia de ataques expone fallos."
+    },
+    "limitation": "El proxy y los casos de ataque son fixtures deterministas, no una certificación de seguridad."
+  }
+}
