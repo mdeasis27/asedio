@@ -62,3 +62,8 @@ describe("partial coverage", () => {
     for (const [k, expected] of Object.entries(statsFixture.coverage.outcomes)) expect(outcomes(Number(k)), `k=${k}`).toEqual(expected);
   });
 });
+
+it("an unknown attack family is never defended", () => {
+  const attack = { ...ATTACKS[0], category: "new_family" } as (typeof ATTACKS)[number];
+  expect(coveredTarget(7)(attack)).toBe(attack.compromisedResponse);
+});

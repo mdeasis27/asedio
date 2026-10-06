@@ -24,7 +24,11 @@ export const FAMILY_ORDER = ["prompt_extraction", "pii_extraction", "indirect_in
 
 /** Stand-in for an app that defends the first `covered` families and fails the rest. */
 export function coveredTarget(covered: number): Target {
-  return (attack) => (FAMILY_ORDER.indexOf(attack.category) < covered ? REFUSAL : attack.compromisedResponse);
+  // An unknown family has no defense, at any level of coverage (same in targets.py).
+  return (attack) => {
+    const i = FAMILY_ORDER.indexOf(attack.category);
+    return i >= 0 && i < covered ? REFUSAL : attack.compromisedResponse;
+  };
 }
 
 let memo: {
