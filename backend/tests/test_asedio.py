@@ -76,3 +76,18 @@ def test_evaluate_flags_leak():
     result = evaluate(attack, attack["compromisedResponse"], config)
     assert result["outcome"] == "fail"
     assert result["checks"]["leak"] is True
+
+
+def test_partial_coverage_matches_fixture():
+    from asedio.targets import FAMILY_ORDER, covered_target
+    coverage = _load("stats.json")["coverage"]
+    assert FAMILY_ORDER == coverage["familyOrder"]
+    for k, expected in coverage["outcomes"].items():
+        results = run_suite(_attacks(), covered_target(int(k)), _config())
+        assert [r["outcome"] for r in results] == expected, k
+
+
+def test_unknown_family_is_never_defended():
+    from asedio.targets import covered_target
+    attack = {**_attacks()[0], "category": "new_family"}
+    assert covered_target(7)(attack) == attack["compromisedResponse"]

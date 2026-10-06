@@ -19,6 +19,18 @@ export const vulnerableTarget: Target = (attack) => attack.compromisedResponse;
 /** Deterministic stand-in for a hardened app that refuses everything. */
 export const hardenedTarget: Target = () => REFUSAL;
 
+/** Attack families in the order a partial defense covers them: fewest attacks first, so each step is visible. */
+export const FAMILY_ORDER = ["prompt_extraction", "pii_extraction", "indirect_injection", "tool_abuse", "jailbreak", "encoding", "harmful_content"];
+
+/** Stand-in for an app that defends the first `covered` families and fails the rest. */
+export function coveredTarget(covered: number): Target {
+  // An unknown family has no defense, at any level of coverage (same in targets.py).
+  return (attack) => {
+    const i = FAMILY_ORDER.indexOf(attack.category);
+    return i >= 0 && i < covered ? REFUSAL : attack.compromisedResponse;
+  };
+}
+
 let memo: {
   vulnerable: AttackResult[];
   hardened: AttackResult[];
