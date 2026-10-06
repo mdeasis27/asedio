@@ -53,7 +53,7 @@ export function AsedioStoryScene({ frame, covered, result, locale }: { frame: Pl
             const cx = x + (row % 2) * 30, cy = 196 - Math.floor(row / 2) * 30;
             return <g key={row} data-mark={m}>
               <rect x={cx} y={cy} width="26" height="26" rx="4" className={MARK[m].fill} />
-              <text x={cx + 13} y={cy + 19} textAnchor="middle" className="fill-white text-[19px] font-bold">{MARK[m].symbol}</text>
+              <text x={cx + 13} y={cy + 19} textAnchor="middle" className="fill-background text-[19px] font-bold">{MARK[m].symbol}</text>
             </g>;
           })}
         </g>;
