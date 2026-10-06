@@ -38,12 +38,12 @@ export function AsedioStoryScene({ frame, covered, result, locale }: { frame: Pl
       {doors.map((d, i) => {
         const x = doorX(i), open = d.marks.includes("fail"), review = d.marks.includes("needs-review");
         return <g key={d.family} data-door={d.family} data-locked={d.locked} data-open={open}>
-          <rect x={x} y="250" width="56" height="100" className="fill-neutral-950" />
+          <rect x={x} y="250" width="56" height="100" className="fill-foreground/80" />
           <g className={`${MOVE} origin-left [transform-box:fill-box]`} style={{ transform: open ? "scaleX(0.25)" : "none" }}>
             <rect x={x} y="250" width="56" height="100" className="fill-surface stroke-muted-foreground" strokeWidth="1.5" />
             <circle cx={x + 46} cy="302" r="3" className="fill-muted-foreground" />
           </g>
-          <text x={x + 28} y="282" textAnchor="middle" className={`${open ? "fill-white" : "fill-foreground"} font-mono text-[26px] font-semibold`}>{i + 1}</text>
+          <text x={x + 28} y="282" textAnchor="middle" className={`${open ? "fill-background" : "fill-foreground"} font-mono text-[26px] font-semibold`}>{i + 1}</text>
           {d.locked ? <g aria-hidden="true" className="fill-none stroke-foreground" strokeWidth="2.5">
             <path d={`M${x + 21} 314v-5a7 7 0 0 1 14 0v5`} />
             <rect x={x + 17} y="314" width="22" height="16" rx="2" className="fill-foreground" />
