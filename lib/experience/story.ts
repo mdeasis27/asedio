@@ -1,7 +1,5 @@
 import type { Heading } from "@/design-system/demo/project-story";
 
-type NodeCopy = { name: string; sub: string; analogy: string };
-
 export interface AsedioStory {
   name: string;
   oneLiner: string;
@@ -13,7 +11,7 @@ export interface AsedioStory {
   fit: { heading: Heading; worthLabel: string; worth: string; notLabel: string; not: string };
   proves: { heading: Heading; text: string };
   engineers: { summary: string; points: string[]; repoLabel: string };
-  scene: { title: string; caption: string; statusLabels: { active: string; success: string; danger: string; off: string }; tapeLabel: string; nodes: { attacks: NodeCopy; defenses: NodeCopy; assistant: NodeCopy }; tape: { served: string; rerouted: string; lost: string }; throughOf: (n: number) => string };
+  scene: { title: string; caption: string; house: string; houseLabel: (locks: number, through: number) => string; doorsLabel: string; locked: string; unlocked: string; tapeLabel: string; tape: { served: string; rerouted: string; lost: string }; throughOf: (n: number) => string };
 }
 
 export const STORY: Record<"en" | "es", AsedioStory> = {
@@ -97,14 +95,13 @@ export const STORY: Record<"en" | "es", AsedioStory> = {
     },
     scene: {
       title: "Which doors held",
-      caption: "Watch the attacks arrive three at a time, and see which ones the defenses stop.",
-      statusLabels: { active: "partial defenses", success: "fully defended", danger: "an attack got through", off: "no defenses" },
+      caption: "Someone tries the doors in the order the 12 tests ran. A green check is a lock that held, a red × is a door that opened and a blue light is a case flagged for a person. Those blue lights come from the reviewer, so they can show up at a door with no lock.",
+      house: "the assistant before launch",
+      houseLabel: (locks, through) => `A house with seven doors, ${locks} of them with a lock. ${through === 0 ? "No attack got through" : through === 1 ? "1 attack got through" : `${through} attacks got through`}.`,
+      doorsLabel: "The seven doors and what happened at each one",
+      locked: "with a lock",
+      unlocked: "no lock",
       tapeLabel: "Twelve tests, in the order they ran",
-      nodes: {
-        attacks: { name: "Attacks", sub: "12 attempts", analogy: "trying the doors" },
-        defenses: { name: "Defenses", sub: "kinds covered", analogy: "the locks" },
-        assistant: { name: "Assistant", sub: "before launch", analogy: "the house" },
-      },
       tape: { served: "blocked", rerouted: "flagged for review", lost: "got through" },
       throughOf: (n) => (n === 0 ? "No attack got through" : n === 1 ? "1 attack got through" : `${n} attacks got through`),
     },
@@ -189,14 +186,13 @@ export const STORY: Record<"en" | "es", AsedioStory> = {
     },
     scene: {
       title: "Qué puertas aguantaron",
-      caption: "Mira cómo llegan los ataques de tres en tres, y cuáles detienen las defensas.",
-      statusLabels: { active: "defensas parciales", success: "todo defendido", danger: "pasó un ataque", off: "sin defensas" },
+      caption: "Alguien prueba las puertas en el orden en que corrieron las 12 pruebas. Una marca verde es una cerradura que aguantó, una × roja es una puerta que se abrió y una luz azul es un caso marcado para que lo revise una persona. Esas luces azules vienen del revisor, así que pueden aparecer en una puerta sin cerradura.",
+      house: "el asistente antes de lanzarse",
+      houseLabel: (locks, through) => `Una casa con siete puertas, ${locks} con cerradura. ${through === 0 ? "No pasó ningún ataque" : through === 1 ? "Pasó 1 ataque" : `Pasaron ${through} ataques`}.`,
+      doorsLabel: "Las siete puertas y lo que pasó en cada una",
+      locked: "con cerradura",
+      unlocked: "sin cerradura",
       tapeLabel: "Doce pruebas, en el orden en que corrieron",
-      nodes: {
-        attacks: { name: "Ataques", sub: "12 intentos", analogy: "probar las puertas" },
-        defenses: { name: "Defensas", sub: "tipos cubiertos", analogy: "las cerraduras" },
-        assistant: { name: "Asistente", sub: "antes de lanzarse", analogy: "la casa" },
-      },
       tape: { served: "bloqueado", rerouted: "marcado para revisión", lost: "pasó" },
       throughOf: (n) => (n === 0 ? "No pasó ningún ataque" : n === 1 ? "Pasó 1 ataque" : `Pasaron ${n} ataques`),
     },

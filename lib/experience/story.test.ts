@@ -34,6 +34,11 @@ describe("Asedio story copy", () => {
     expect(STORY.en.compare.sentence(5, 0)).toBe("With your defenses, 5 attacks got through. With all seven, none.");
   });
 
+  it("describes the house with the run's locks and count", () => {
+    expect(STORY.es.scene.houseLabel(4, 5)).toBe("Una casa con siete puertas, 4 con cerradura. Pasaron 5 ataques.");
+    expect(STORY.en.scene.houseLabel(7, 1)).toBe("A house with seven doors, 7 of them with a lock. 1 attack got through.");
+  });
+
   it("asks the bet about the chosen coverage", () => {
     expect(STORY.es.tryIt.question(4)).toContain("con defensas para 4 de 7 tipos de ataque");
     expect(STORY.en.tryIt.question(7)).toContain("defenses for 7 of 7");
